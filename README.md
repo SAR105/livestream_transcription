@@ -1,4 +1,4 @@
-# Livestream Trnascription
+# Livestream Transcription
 
 ## Conda Env
 
