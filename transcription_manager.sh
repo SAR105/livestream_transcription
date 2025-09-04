@@ -25,8 +25,11 @@ start() {
     exit 0
   fi
   echo "Starting server..."
-  nohup "$CONDA_BIN" run -n "$CONDA_ENV" python -u "$ENTRYPOINT" \
+
+  nohup "$CONDA_BIN" run -n "$CONDA_ENV" uvicorn transcription:app \
+    --host 127.0.0.1 --port 8888 --reload \
     >>"$OUT_LOG" 2>>"$ERR_LOG" &
+
   echo $! > "$PID_FILE"
   echo "Started (PID $(cat $PID_FILE))"
 }
