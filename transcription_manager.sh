@@ -24,27 +24,22 @@ start() {
     echo "Server already running (PID $(cat $PID_FILE))."
     exit 0
   fi
-  echo "Starting server..."
 
-  nohup "$CONDA_BIN" run -n "$CONDA_ENV" uvicorn transcription:app \
-    --host 127.0.0.1 --port 8888 --reload \
+  nohup "$CONDA_BIN" run -n "$CONDA_ENV" uvicorn live_ts:app \
+    --host 127.0.0.1 --port 8888 \
     >>"$OUT_LOG" 2>>"$ERR_LOG" &
 
-  echo $! > "$PID_FILE"
-  echo "Started (PID $(cat $PID_FILE))"
+  echo "Starting server... Check on port 8888 to verify."
 }
 
 stop() {
-  if ! is_running; then
+  pida=$(ps -ef | grep "[m]ultiscreen" | awk '{print $2}')
+  if [ -z "$pida" ]; then
     echo "Server not running."
-    rm -f "$PID_FILE"
     exit 0
   fi
-  pid=$(cat "$PID_FILE")
-  echo "Stopping PID $pid..."
-  kill "$pid" 2>/dev/null || true
-  rm -f "$PID_FILE"
-  echo "Stopped."
+  echo "Killing process $pida..."
+  kill -9 "$pida"
 }
 
 restart() {
