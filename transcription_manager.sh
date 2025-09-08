@@ -33,13 +33,15 @@ start() {
 }
 
 stop() {
-  pida=$(ps -ef | grep "[m]ultiscreen" | awk '{print $2}')
+  pida=$(pgrep -f multiscreen)
   if [ -z "$pida" ]; then
     echo "Server not running."
-    exit 0
+  else
+    echo "Killing process $pida..."
+    for pid in $pida; do
+      kill -9 "$pid"
+    done
   fi
-  echo "Killing process $pida..."
-  kill -9 "$pida"
 }
 
 restart() {
